@@ -1,21 +1,34 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
+/**
+ * @file
+ * Native round-trip and invalid-input tests for CRTPUP assembly.
+ */
 #include "ble_crtpup.h"
 #include "ble_crtpdown.h"
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
-int main(void) {
+/**
+ * Run exhaustive length/PID round trips and malformed-fragment checks.
+ * @return 0 when all assertions pass; abort on a failed assertion.
+ */
+int main(void)
+{
   BleCrtpupState state;
   uint8_t packet[32];
-  for (unsigned i = 0; i < sizeof(packet); i++) {
+  for (unsigned i = 0; i < sizeof(packet); i++)
+  {
     packet[i] = i;
   }
-  for (unsigned length = 1; length <= 32; length++) {
-    for (unsigned pid = 0; pid < 4; pid++) {
+  for (unsigned length = 1; length <= 32; length++)
+  {
+    for (unsigned pid = 0; pid < 4; pid++)
+    {
       BleCrtpdownFragments fragments;
       assert(bleCrtpdownBuildFragments(packet, length, pid, &fragments));
       bleCrtpupReset(&state);
-      for (unsigned j = 0; j < fragments.count; j++) {
+      for (unsigned j = 0; j < fragments.count; j++)
+      {
         bool complete = bleCrtpupConsume(&state, fragments.fragments[j].data, fragments.fragments[j].length);
         assert(complete == (j == fragments.count - 1));
       }

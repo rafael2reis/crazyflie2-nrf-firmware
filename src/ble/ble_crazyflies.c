@@ -14,7 +14,8 @@ static void on_write(ble_crazyflie_t* p_crazyflie, ble_evt_t const* p_ble_evt) {
     if (p_evt_write->handle == p_crazyflie->crtp_char_handles.value_handle) {
         p_crazyflie->data_handler(p_crazyflie, p_evt_write->data, p_evt_write->len);
     } else if (p_evt_write->handle == p_crazyflie->crtpup_char_handles.value_handle) {
-        if (bleCrtpupConsume(&p_crazyflie->uplink, p_evt_write->data, p_evt_write->len)) {
+        if (bleCrtpupConsume(&p_crazyflie->uplink, p_evt_write->data, p_evt_write->len))
+        {
             p_crazyflie->data_handler(p_crazyflie, p_crazyflie->uplink.data,
                                       p_crazyflie->uplink.length);
         }
